@@ -2,6 +2,7 @@ import os
 from robyn import Request, Response, Robyn, status_codes, HttpMethod
 from apps.users.api_routes import users_api_routes # 导入用户接口路由
 from apps.users.views.view_routes import users_view_routes # 导入用户视图路由
+from apps.vio_word.views.view_routes import vio_word_view_routes # 导入违规词检测视图路由
 from pathlib import Path
 from settings import configure_cors
 from core.cache import Cache
@@ -28,6 +29,8 @@ users_api_routes(app)
 # 注册用户服务视图路由
 users_view_routes(app)
 
+# 注册违规词检测视图路由
+vio_word_view_routes(app)
 
 # 初始化Redis连接的路由
 @app.get("/initialize")
@@ -62,12 +65,11 @@ async def shutdown(request: Request) -> Response:
 
 if __name__ == "__main__":
     try:
-        # 在新的事件循环中初始化Redis
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         
         # 启动应用
-        app.start(port=6789, host="0.0.0.0")
+        app.start(port=4455, host="0.0.0.0")
     except Exception as e:
         logger.error(f"Failed to start application: {str(e)}")
         raise
